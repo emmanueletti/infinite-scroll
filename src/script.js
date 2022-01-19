@@ -1,14 +1,16 @@
-// Unsplash API
-const count = 20;
-const API_KEY = 'u44XwGNny8w8s7SjnT_aDXfEQGGxQy0dWW4jFiFjdB8';
-const API_URL = `https://api.unsplash.com/photos/random/?client_id=${API_KEY}&count=${count}`;
-
 const state = {
   photosArray: [],
   ready: false,
   imagesLoaded: 0,
   totalImages: 0,
+  initialLoadComplete: false,
+  // First download 5 images for fast performance, then change the count
+  // to a higher value after initial load
+  count: this.initialLoadComplete ? 20 : 5,
 };
+
+const API_KEY = 'u44XwGNny8w8s7SjnT_aDXfEQGGxQy0dWW4jFiFjdB8';
+const API_URL = `https://api.unsplash.com/photos/random/?client_id=${API_KEY}&count=${state.count}`;
 
 const imageContainer = document.querySelector('#image-container');
 const loader = document.querySelector('#loader');
@@ -20,17 +22,13 @@ const setAttributes = (element, attributes) => {
   }
 };
 
-const showLoadingIcon = () => {
-  loader.hidden = false;
-};
-
 const hideLoadingIcon = () => {
   loader.hidden = true;
 };
 
 const imageLoaded = () => {
+  state.initialLoadComplete = true;
   state.imagesLoaded++;
-  console.log(state.imagesLoaded, state.totalImages);
   if (state.imagesLoaded === state.totalImages) {
     state.ready = true;
     hideLoadingIcon();
@@ -38,10 +36,13 @@ const imageLoaded = () => {
 };
 
 const resetState = (newData) => {
-  state.photosArray = newData;
-  state.totalImages = newData.length;
-  state.imagesLoaded = 0;
-  state.ready = false;
+  state = {
+    ...state,
+    photosArray: newData,
+    totalImages: newData.length,
+    imageLoaded: 0,
+    ready: false,
+  };
 };
 
 // End Helper functions
@@ -75,7 +76,6 @@ const displayPhotosToDOM = () => {
 };
 
 const fetchPhotosFromAPI = () => {
-  showLoadingIcon();
   fetch(API_URL)
     .then((resp) => resp.json())
     .then((data) => {
@@ -92,8 +92,8 @@ window.addEventListener('scroll', (_e) => {
   const portionOfPageUnseen =
     (totalHeightOfEntirePage - usersDistanceFromPageTop) /
     totalHeightOfEntirePage;
+
   if (portionOfPageUnseen <= 0.2 && state.ready) {
-    console.log('one third to the bottom');
     fetchPhotosFromAPI();
   }
 });
