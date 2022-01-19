@@ -1,0 +1,62 @@
+html {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: 'Bebas Neue', sans-serif;
+  background-color: whitesmoke;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h1 {
+  margin-top: 25px;
+  margin-bottom: 15px;
+  font-size: 1.5rem;
+  letter-spacing: 1.5px;
+}
+
+/* Trick to make loader stay in the middle of the page no matter what */
+.loader {
+  position: fixed;
+  /* 
+  by making the distance from all sides = 0 with position = fixed, div is 
+  basically stretched to cover the entire page
+  */
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+}
+/* 
+makes the image inside the loader snap into the middle and stay there no matter
+what 
+*/
+.loader img {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Image container */
+.image-container {
+  width: 90%;
+  max-width: 600px;
+  margin-bottom: 50px;
+}
+
+.image-container img {
+  width: 100%;
+  margin-top: 10px;
+}
+
+@media screen and (min-width: 600px) {
+  h1 {
+    font-size: 2.5rem;
+  }
+}
